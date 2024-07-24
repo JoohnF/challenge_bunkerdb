@@ -22,17 +22,18 @@ const saveCampaign = async (campaign: Campaign) => {
 };
 
 const updateCampaignById = async (id: string, data: Campaign) => {
-    const response = await CampaignModel.findOneAndUpdate(
-        { _id: id },
-        data,
-        { new: true }
-    );
-    
-    if (response) {
-        return { updated: true, campaign: response };
-    } else {
-        return { updated: false };
-    }
+    try {
+        const response = await CampaignModel.findOneAndUpdate(
+            { _id: id },
+            data,
+            { new: true }
+        );
+
+        if (response) {
+            return { updated: true, campaign: response };
+        }
+    } catch (e) {}
+    return { updated: false };
 };
 
 const updateCampaignBudget = async (campaignId: string) => {
@@ -47,8 +48,12 @@ const updateCampaignBudget = async (campaignId: string) => {
 };
 
 const deleteCampaignById = async (id: string) => {
-    const response = await CampaignModel.findOneAndDelete({ _id: id });
-    return response !== null;
+    try {
+        const response = await CampaignModel.findOneAndDelete({ _id: id });
+        return response !== null;
+    } catch (e) {
+        return false;
+    }
 };
 
 export { getCampaignById, getCampaigns, saveCampaign, updateCampaignById, updateCampaignBudget, deleteCampaignById };
